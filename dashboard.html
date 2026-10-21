@@ -32,13 +32,15 @@
     .assistant-backdrop{position:fixed;inset:0;z-index:30;display:none;background:rgba(8,22,40,.38);backdrop-filter:blur(2px)}.assistant-backdrop.open{display:block}
     .assistant-card{position:fixed;z-index:31;top:18px;right:18px;bottom:18px;width:min(420px,calc(100vw - 36px));min-height:0;margin:0;opacity:0;pointer-events:none;transform:translateX(calc(100% + 28px));transition:transform .24s ease,opacity .2s ease;box-shadow:0 24px 60px rgba(7,24,45,.28)}.assistant-card.open{opacity:1;pointer-events:auto;transform:translateX(0)}
     .assistant-close{margin-left:auto;display:grid;place-items:center;width:32px;height:32px;border:1px solid #d9e2ee;border-radius:9px;background:#fff;color:#52637b;font-size:22px;line-height:1;cursor:pointer}.assistant-close:hover{background:#f4f7fb;color:#173250}body.assistant-open{overflow:hidden}
-    @media(max-width:700px){.assistant-card{top:12px;right:12px;bottom:12px;width:calc(100vw - 24px);padding:18px;border-radius:18px}.assistant-card .messages{max-height:none}.nav-icon{width:42px;height:42px}}
+    .brand-wordmark{display:inline-flex;align-items:baseline;margin:0;font-size:38px;font-weight:780;line-height:1;letter-spacing:-.055em}.brand-meter{color:#fff}.brand-iq{position:relative;margin-left:2px;color:#9fc0ff;letter-spacing:-.07em}.brand-iq::after{content:"";position:absolute;right:1px;bottom:-8px;left:1px;height:3px;border-radius:99px;background:linear-gradient(90deg,#6f9fff,#55d3c0)}
+    .site-footer{max-width:1120px;margin-top:22px;padding:17px 3px 0;border-top:1px solid #dbe3ed;color:#75839a;font-size:11px;letter-spacing:.01em}.site-footer strong{color:#4c5f78;font-weight:700}
+    @media(max-width:700px){.brand-wordmark{font-size:34px}.assistant-card{top:12px;right:12px;bottom:12px;width:calc(100vw - 24px);padding:18px;border-radius:18px}.assistant-card .messages{max-height:none}.nav-icon{width:42px;height:42px}.site-footer{margin-top:18px;padding-top:15px}}
   </style>
 </head>
 <body>
   <main class="shell">
     <header class="topbar">
-      <div><h1 class="title">MeterIQ</h1></div>
+      <div><h1 class="title brand-wordmark" aria-label="MeterIQ"><span class="brand-meter">Meter</span><span class="brand-iq">IQ</span></h1></div>
       <div class="top-actions"><div class="status-pill"><i class="dot"></i><span id="data-status">Loading local data</span></div><button class="select" id="refresh">Refresh data</button><button class="nav-icon" id="assistant-toggle" type="button" aria-label="Open data assistant" aria-controls="assistant-panel" aria-expanded="false" title="Open data assistant"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5c-1.15 0-2.24-.26-3.22-.71L4 20l1.7-4.19A7.47 7.47 0 1 1 20 11.5Z"></path><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"></path></svg></button></div>
     </header>
     <section class="metrics" id="metrics"></section>
@@ -71,6 +73,7 @@
         </section>
       </div>
     </div>
+    <footer class="site-footer">© <strong>Nisource Inc.</strong> All rights reserved.</footer>
     <div class="assistant-backdrop" id="assistant-backdrop"></div>
     <aside class="card assistant-card" id="assistant-panel" aria-label="Usage data assistant" aria-hidden="true">
         <div class="assistant-header"><div class="bot-icon">AI</div><div><div class="assistant-title">Usage data assistant</div><div class="assistant-caption">Answers grounded in the loaded meter history</div></div><button class="assistant-close" id="assistant-close" type="button" aria-label="Close data assistant">×</button></div>
