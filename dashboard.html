@@ -29,7 +29,7 @@
 <body>
   <main class="shell">
     <header class="topbar">
-      <div><div class="eyebrow">Meter analytics · operational monitoring</div><h1 class="title">Usage intelligence</h1><p class="subtitle" id="period">Loading meter history…</p></div>
+      <div><div class="eyebrow">Meter analytics · operational monitoring</div><h1 class="title">Usage intelligence</h1></div>
       <div class="top-actions"><div class="status-pill"><i class="dot"></i><span id="data-status">Loading local data</span></div><button class="select" id="refresh">Refresh data</button></div>
     </header>
     <section class="metrics" id="metrics"></section>
@@ -111,11 +111,10 @@ function setDataSource(backend){
 async function load(){
   el('data-status').textContent='Refreshing…';
   try{const response=await fetch('/api/data',{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);DATA=await response.json();render();return setDataSource(response.headers.get('X-Data-Backend'));}
-  catch(error){el('data-status').textContent='Could not load data';el('period').textContent=`Start the dashboard with python dashboard.py (${error.message})`;}
+  catch(error){el('data-status').textContent='Could not load data';}
 }
 function render(){
   const s=DATA.customerStats;const flagged=DATA.flaggedCount;
-  el('period').textContent=`${DATA.historyStart} — ${DATA.historyEnd} · ${DATA.customers.length} customers`;
   const missing=DATA.missingReadGapCount||0;const budgetFlagged=DATA.current.filter(r=>r.flag==='TRUE'&&r['budget indicator']==='Y').length;el('metrics').innerHTML=`<button type="button" class="metric widget" data-widget="history" aria-label="View historical reading details"><div class="metric-label">Historical readings</div><div class="metric-value">${DATA.historyCount.toLocaleString()}</div><div class="metric-note">${DATA.historyStart} through ${DATA.historyEnd}</div></button><button type="button" class="metric widget" data-widget="customers" aria-label="View customer details"><div class="metric-label">Customers monitored</div><div class="metric-value">${DATA.customers.length}</div><div class="metric-note">One meter per customer in this dataset</div></button><button type="button" class="metric widget" data-widget="current" aria-label="View current reading details"><div class="metric-label">Current reads analyzed</div><div class="metric-value">${DATA.currentCount.toLocaleString()}</div><div class="metric-note">Latest: ${esc(DATA.latest||'No current reads')}</div></button><button type="button" class="metric widget ${flagged?'alert':''}" data-widget="flags" aria-label="View spike flag details"><div class="metric-label">Usage spike flags</div><div class="metric-value">${flagged}</div><div class="metric-note">For review · not a customer finding</div></button><button type="button" class="metric widget ${budgetFlagged?'alert':''}" data-widget="budget-flags" aria-label="View budget customer spike details"><div class="metric-label">Budget customer spike flags</div><div class="metric-value">${budgetFlagged}</div><div class="metric-note">Flagged reads for budget indicator Y</div></button><button type="button" class="metric widget ${missing?'alert':''}" data-widget="missing" aria-label="View missing read gaps"><div class="metric-label">Missing read gaps</div><div class="metric-value">${missing}</div><div class="metric-note">${DATA.missingReadCount||0} fully missing month(s), if any</div></button>`;
   const filter=el('customer-filter');const previous=filter.value;filter.innerHTML='<option value="all">All customers</option>'+DATA.customers.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');if([...filter.options].some(o=>o.value===previous))filter.value=previous;
   drawTrend();drawSpikes();drawSpikes(true);drawMissingReads();drawTable();
