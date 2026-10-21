@@ -27,8 +27,8 @@
   </style>
   <style>
     .layout{grid-template-columns:minmax(0,1fr);max-width:1120px}
-    .nav-icon{display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid rgba(255,255,255,.35);border-radius:12px;background:#fff;color:#173250;cursor:pointer;transition:transform .15s,box-shadow .15s}
-    .nav-icon:hover{transform:translateY(-1px);box-shadow:0 7px 17px rgba(4,20,39,.17)}.nav-icon:focus-visible,.assistant-close:focus-visible{outline:3px solid #a9c3ff;outline-offset:2px}.nav-icon svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+    .nav-icon{display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid rgba(255,255,255,.42);border-radius:12px;background:linear-gradient(145deg,#fff 0%,#eaf1ff 100%);color:#2852a7;cursor:pointer;box-shadow:0 4px 14px rgba(4,20,39,.14);transition:transform .15s,box-shadow .15s,background .15s}
+    .nav-icon:hover{transform:translateY(-1px);background:linear-gradient(145deg,#fff 0%,#dde9ff 100%);box-shadow:0 8px 19px rgba(4,20,39,.2)}.nav-icon:focus-visible,.assistant-close:focus-visible{outline:3px solid #a9c3ff;outline-offset:2px}.nav-icon svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.nav-icon .spark{fill:#4b7fe3;stroke:none}
     .assistant-backdrop{position:fixed;inset:0;z-index:30;display:none;background:rgba(8,22,40,.38);backdrop-filter:blur(2px)}.assistant-backdrop.open{display:block}
     .assistant-card{position:fixed;z-index:31;top:18px;right:18px;bottom:18px;width:min(420px,calc(100vw - 36px));min-height:0;margin:0;opacity:0;pointer-events:none;transform:translateX(calc(100% + 28px));transition:transform .24s ease,opacity .2s ease;box-shadow:0 24px 60px rgba(7,24,45,.28)}.assistant-card.open{opacity:1;pointer-events:auto;transform:translateX(0)}
     .assistant-close{margin-left:auto;display:grid;place-items:center;width:32px;height:32px;border:1px solid #d9e2ee;border-radius:9px;background:#fff;color:#52637b;font-size:22px;line-height:1;cursor:pointer}.assistant-close:hover{background:#f4f7fb;color:#173250}body.assistant-open{overflow:hidden}
@@ -41,7 +41,7 @@
   <main class="shell">
     <header class="topbar">
       <div><h1 class="title brand-wordmark" aria-label="MeterIQ"><span class="brand-meter">Meter</span><span class="brand-iq">IQ</span></h1></div>
-      <div class="top-actions"><div class="status-pill"><i class="dot"></i><span id="data-status">Loading local data</span></div><button class="select" id="refresh">Refresh data</button><button class="nav-icon" id="assistant-toggle" type="button" aria-label="Open data assistant" aria-controls="assistant-panel" aria-expanded="false" title="Open data assistant"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5c-1.15 0-2.24-.26-3.22-.71L4 20l1.7-4.19A7.47 7.47 0 1 1 20 11.5Z"></path><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"></path></svg></button></div>
+      <div class="top-actions"><div class="status-pill"><i class="dot"></i><span id="data-status">Loading local data</span></div><button class="select" id="refresh">Refresh data</button><button class="nav-icon" id="assistant-toggle" type="button" aria-label="Open data assistant" aria-controls="assistant-panel" aria-expanded="false" title="Open data assistant"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 10.8a6.8 6.8 0 0 1-6.8 6.8c-1.08 0-2.1-.25-3.01-.68L5 18.6l1.58-3.63A6.78 6.78 0 1 1 19 10.8Z"></path><path d="M8.7 12.25h.01M11.85 12.25h.01"></path><path class="spark" d="m17.15 3 .68 1.72L19.55 5.4l-1.72.68-.68 1.72-.68-1.72-1.72-.68 1.72-.68L17.15 3Z"></path></svg></button></div>
     </header>
     <section class="metrics" id="metrics"></section>
     <div class="layout">
