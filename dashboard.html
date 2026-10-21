@@ -25,12 +25,21 @@
     @media(max-width:1180px){.metrics{grid-template-columns:repeat(3,1fr);margin:-32px 10px 22px}.metric{min-height:118px}.layout{grid-template-columns:minmax(0,1fr)}.assistant-card{position:static}}
     @media(max-width:700px){.shell{padding:16px 13px 34px}.topbar{display:block;padding:24px 21px;border-radius:18px}.title{font-size:29px}.top-actions{margin-top:18px;flex-wrap:wrap}.status-pill,.select{min-height:42px}.metrics{grid-template-columns:repeat(2,1fr);gap:9px;margin:-14px 0 16px}.metric{min-height:112px;padding:15px 13px}.metric-value{font-size:25px}.layout{grid-template-columns:minmax(0,1fr);gap:12px}.column{gap:12px}.card{padding:17px;border-radius:14px}.card-head{align-items:flex-start}.filter-row{width:100%;flex-wrap:wrap}.filter-row select{min-height:34px}.chart{height:235px}.spike-chart{height:220px}.assistant-card{min-height:0;padding:17px}.messages{flex:none;min-height:0;max-height:220px}.messages:empty{display:none}.suggestions{margin-top:2px}#trend-chart,#spike-chart,#budget-spike-chart{overflow-x:auto;overflow-y:hidden;padding-bottom:5px;scrollbar-color:#b4c3da transparent;scrollbar-width:thin}#trend-chart .chart,#spike-chart .spike-chart,#budget-spike-chart .spike-chart{min-width:680px}.chart-legend{flex-wrap:wrap}.suggestion{min-height:34px}.modal-backdrop{padding:12px}.modal{padding:18px 15px}.modal-controls{flex-wrap:wrap}.modal-controls select{min-height:38px}.hourly-chart{min-width:680px}.modal{overflow-x:auto}}
   </style>
+  <style>
+    .layout{grid-template-columns:minmax(0,1fr);max-width:1120px}
+    .nav-icon{display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid rgba(255,255,255,.35);border-radius:12px;background:#fff;color:#173250;cursor:pointer;transition:transform .15s,box-shadow .15s}
+    .nav-icon:hover{transform:translateY(-1px);box-shadow:0 7px 17px rgba(4,20,39,.17)}.nav-icon:focus-visible,.assistant-close:focus-visible{outline:3px solid #a9c3ff;outline-offset:2px}.nav-icon svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+    .assistant-backdrop{position:fixed;inset:0;z-index:30;display:none;background:rgba(8,22,40,.38);backdrop-filter:blur(2px)}.assistant-backdrop.open{display:block}
+    .assistant-card{position:fixed;z-index:31;top:18px;right:18px;bottom:18px;width:min(420px,calc(100vw - 36px));min-height:0;margin:0;opacity:0;pointer-events:none;transform:translateX(calc(100% + 28px));transition:transform .24s ease,opacity .2s ease;box-shadow:0 24px 60px rgba(7,24,45,.28)}.assistant-card.open{opacity:1;pointer-events:auto;transform:translateX(0)}
+    .assistant-close{margin-left:auto;display:grid;place-items:center;width:32px;height:32px;border:1px solid #d9e2ee;border-radius:9px;background:#fff;color:#52637b;font-size:22px;line-height:1;cursor:pointer}.assistant-close:hover{background:#f4f7fb;color:#173250}body.assistant-open{overflow:hidden}
+    @media(max-width:700px){.assistant-card{top:12px;right:12px;bottom:12px;width:calc(100vw - 24px);padding:18px;border-radius:18px}.assistant-card .messages{max-height:none}.nav-icon{width:42px;height:42px}}
+  </style>
 </head>
 <body>
   <main class="shell">
     <header class="topbar">
       <div><h1 class="title">MeterIQ</h1></div>
-      <div class="top-actions"><div class="status-pill"><i class="dot"></i><span id="data-status">Loading local data</span></div><button class="select" id="refresh">Refresh data</button></div>
+      <div class="top-actions"><div class="status-pill"><i class="dot"></i><span id="data-status">Loading local data</span></div><button class="select" id="refresh">Refresh data</button><button class="nav-icon" id="assistant-toggle" type="button" aria-label="Open data assistant" aria-controls="assistant-panel" aria-expanded="false" title="Open data assistant"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5c-1.15 0-2.24-.26-3.22-.71L4 20l1.7-4.19A7.47 7.47 0 1 1 20 11.5Z"></path><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"></path></svg></button></div>
     </header>
     <section class="metrics" id="metrics"></section>
     <div class="layout">
@@ -61,8 +70,10 @@
           <p class="footnote">A spike flag means the reading exceeded the prototype threshold and needs review.</p>
         </section>
       </div>
-      <aside class="card assistant-card">
-        <div class="assistant-header"><div class="bot-icon">AI</div><div><div class="assistant-title">Usage data assistant</div><div class="assistant-caption">Answers grounded in the loaded meter history</div></div></div>
+    </div>
+    <div class="assistant-backdrop" id="assistant-backdrop"></div>
+    <aside class="card assistant-card" id="assistant-panel" aria-label="Usage data assistant" aria-hidden="true">
+        <div class="assistant-header"><div class="bot-icon">AI</div><div><div class="assistant-title">Usage data assistant</div><div class="assistant-caption">Answers grounded in the loaded meter history</div></div><button class="assistant-close" id="assistant-close" type="button" aria-label="Close data assistant">×</button></div>
         <div class="scope" id="data-scope">Data scope: loading data source…</div>
         <div class="messages" id="messages" aria-live="polite"></div>
         <div class="suggestions">
@@ -73,8 +84,7 @@
         </div>
         <form class="chat-form" id="chat-form"><input id="question" placeholder="Ask about a customer or usage…" autocomplete="off"><button class="send" type="submit">Ask</button></form>
         <p class="footnote"><strong>Data assistant.</strong> Uses data-grounded question patterns locally; no external AI service or customer data sharing.</p>
-      </aside>
-    </div>
+    </aside>
   </main>
   <div class="modal-backdrop" id="trend-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <section class="modal">
@@ -257,10 +267,13 @@ function answer(question){
 function addMessage(text,who){const node=document.createElement('div');node.className='msg '+who;if(who==='bot'&&DATA){let body=esc(text);for(const customer of [...DATA.customers].sort((a,b)=>b.length-a.length))body=body.replaceAll(esc(customer),customerButton(customer));node.innerHTML=body.replace(/\n/g,'<br>');}else node.textContent=text;el('messages').appendChild(node);el('messages').scrollTop=el('messages').scrollHeight;}
 el('chat-form').addEventListener('submit',event=>{event.preventDefault();const input=el('question'),q=input.value.trim();if(!q||!DATA)return;addMessage(q,'user');input.value='';addMessage(answer(q),'bot');});
 document.querySelectorAll('.suggestion').forEach(button=>button.addEventListener('click',()=>{el('question').value=button.textContent;el('chat-form').requestSubmit();}));
+function setAssistantOpen(open){el('assistant-panel').classList.toggle('open',open);el('assistant-backdrop').classList.toggle('open',open);el('assistant-panel').setAttribute('aria-hidden',String(!open));el('assistant-toggle').setAttribute('aria-expanded',String(open));document.body.classList.toggle('assistant-open',open);if(open)setTimeout(()=>el('question').focus(),180);}
+el('assistant-toggle').addEventListener('click',()=>setAssistantOpen(true));el('assistant-close').addEventListener('click',()=>setAssistantOpen(false));el('assistant-backdrop').addEventListener('click',()=>setAssistantOpen(false));
 el('customer-filter').addEventListener('change',()=>{drawTrend();drawSpikes();});el('range-filter').addEventListener('change',drawTrend);el('refresh').addEventListener('click',load);
 el('trend-chart').addEventListener('click',openTrendModal);el('trend-chart').addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openTrendModal();}});el('trend-chart').setAttribute('tabindex','0');el('trend-chart').setAttribute('role','button');
 el('modal-close').addEventListener('click',closeTrendModal);el('trend-modal').addEventListener('click',event=>{if(event.target===el('trend-modal'))closeTrendModal();});document.addEventListener('keydown',event=>{if(event.key==='Escape')closeTrendModal();});el('detail-customer').addEventListener('change',loadDetail);el('detail-range').addEventListener('change',loadDetail);
 el('metrics').addEventListener('click',event=>{const widget=event.target.closest('[data-widget]');if(widget)showWidgetDetails(widget.dataset.widget);});el('widget-modal-close').addEventListener('click',closeWidgetModal);el('widget-modal').addEventListener('click',event=>{if(event.target===el('widget-modal'))closeWidgetModal();});document.addEventListener('keydown',event=>{if(event.key==='Escape')closeWidgetModal();});
+document.addEventListener('keydown',event=>{if(event.key==='Escape')setAssistantOpen(false);});
 document.addEventListener('click',event=>{const customer=event.target.closest('[data-customer]');if(customer)viewCustomerUsage(customer.dataset.customer);});
 load().then(source=>{if(source)addMessage(`Hi. I can answer questions about historical usage, current reads, spike flags, and recent trends in the loaded ${source} data.`,'bot');});
 </script>
