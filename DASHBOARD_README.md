@@ -96,3 +96,27 @@ python .\dashboard.py
 ```
 
 `supabase_import.py` never writes data unless `--apply` is specified. It uses stable read IDs and Supabase upserts, so rerunning it with the same CSV inputs is safe. For a later analysis run, choose a new `--run-id` and set `SUPABASE_ANALYSIS_RUN_ID` to that value before starting the dashboard.
+
+## Deploy on Vercel
+
+The project includes Vercel serverless routes for the dashboard page, `/api/data`,
+and `/api/hourly`. Local development remains unchanged: use `python .\dashboard.py`.
+
+In the Vercel project settings, add these environment variables for **Production**
+and **Preview** before deploying:
+
+```text
+DATA_BACKEND=supabase
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SECRET_KEY=sb_secret_replace_me
+SUPABASE_HISTORY_BATCH_ID=history-csv-initial
+SUPABASE_CURRENT_BATCH_ID=current-csv-initial
+SUPABASE_ANALYSIS_RUN_ID=csv-analysis-initial
+```
+
+Mark `SUPABASE_SECRET_KEY` as sensitive. It is used only by the Python functions;
+it is never sent to `dashboard.html` or committed to Git. After deployment, open
+the site and confirm the status badge says **Supabase data loaded**. The dashboard
+currently exposes the loaded operational data to anyone who can open the site, so
+enable Vercel Deployment Protection or add application authentication before
+sharing a client-facing URL.

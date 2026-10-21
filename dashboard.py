@@ -194,6 +194,32 @@ def build_data(repository: MeterDataRepository = REPOSITORY) -> dict:
     }
 
 
+def build_hourly_data(
+    customer: str = "all",
+    days: int | None = 90,
+    repository: MeterDataRepository = REPOSITORY,
+) -> list[dict]:
+    """Return individual historical readings for the selected dashboard view."""
+    rows = []
+    for read in repository.history_reads():
+        try:
+            when = timestamp(read)
+        except (ValueError, TypeError):
+            continue
+        if customer != "all" and read.customer_id != customer:
+            continue
+        rows.append({
+            "customer": read.customer_id or "Unknown",
+            "timestamp": when.strftime(DATE_FORMAT),
+            "usage": number(read.usage_index),
+        })
+    if rows and days is not None:
+        latest = max(datetime.strptime(row["timestamp"], DATE_FORMAT) for row in rows)
+        start = latest - timedelta(days=days)
+        rows = [row for row in rows if datetime.strptime(row["timestamp"], DATE_FORMAT) >= start]
+    return rows
+
+
 class DashboardHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(ROOT), **kwargs)
@@ -222,24 +248,7 @@ class DashboardHandler(SimpleHTTPRequestHandler):
             customer = query.get("customer", ["all"])[0]
             days_text = query.get("days", ["90"])[0]
             days = None if days_text == "all" else max(1, min(int(days_text), 3650))
-            rows = []
-            for read in REPOSITORY.history_reads():
-                try:
-                    when = timestamp(read)
-                except (ValueError, TypeError):
-                    continue
-                if customer != "all" and read.customer_id != customer:
-                    continue
-                rows.append({
-                    "customer": read.customer_id or "Unknown",
-                    "timestamp": when.strftime(DATE_FORMAT),
-                    "usage": number(read.usage_index),
-                })
-            if rows and days is not None:
-                latest = max(datetime.strptime(row["timestamp"], DATE_FORMAT) for row in rows)
-                start = latest - timedelta(days=days)
-                rows = [row for row in rows if datetime.strptime(row["timestamp"], DATE_FORMAT) >= start]
-            self.send_json(rows)
+            self.send_json(build_hourly_data(customer, days))
             return
         if parsed.path == "/favicon.ico":
             self.send_response(204)
