@@ -266,8 +266,17 @@ python .\dashboard.py
 
 ## Deploy on Vercel
 
-The project includes Vercel serverless routes for the dashboard page, `/api/data`,
-and `/api/hourly`. Local development remains unchanged: use `python .\dashboard.py`.
+Deploy this repository as one Vercel project from the **repository root**.
+`vercel.json` builds the React app from `frontend/`, serves `frontend/dist` at
+the site root, and keeps the Python serverless functions under `api/`. Do not
+set the Vercel Root Directory to `frontend`, because the API functions must
+remain available from the repository root. Local development remains unchanged:
+use `python .\dashboard.py` and `npm run dev` from `frontend`.
+
+Before the first deployment, apply Supabase migrations through
+[`db/011_ticket_workspace.sql`](db/011_ticket_workspace.sql). The deployment
+exposes dashboard, history, investigation, input-feed, and ticket-update API
+routes. The ticket update route is same-origin only: `/api/tickets/{ticketId}`.
 
 In the Vercel project settings, add these environment variables for **Production**
 and **Preview** before deploying:
@@ -280,11 +289,13 @@ SUPABASE_HISTORY_BATCH_ID=history-csv-initial
 SUPABASE_CURRENT_BATCH_ID=current-csv-initial
 SUPABASE_INPUT_FEED_BATCH_ID=input-feed-screening
 SUPABASE_ANALYSIS_RUN_ID=csv-analysis-initial
+ENABLE_FEED_SUBMISSIONS=true
+ENABLE_WEATHER_INVESTIGATION=true
 ```
 
 Mark `SUPABASE_SECRET_KEY` as sensitive. It is used only by the Python functions;
-it is never sent to `dashboard.html` or committed to Git. After deployment, open
-the site and confirm the status badge says **Supabase data loaded**. The dashboard
-currently exposes the loaded operational data to anyone who can open the site, so
-enable Vercel Deployment Protection or add application authentication before
-sharing a client-facing URL.
+it is never sent to the React browser bundle or committed to Git. Do not give it
+a `VITE_` prefix. After deployment, open the site and confirm the status badge
+says **Supabase data loaded**. The dashboard currently exposes the loaded
+operational data to anyone who can open the site, so enable Vercel Deployment
+Protection or add application authentication before sharing a client-facing URL.

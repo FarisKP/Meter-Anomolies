@@ -1,9 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm --prefix frontend ci && npm --prefix frontend run build",
+  "outputDirectory": "frontend/dist",
   "rewrites": [
     { "source": "/api/feed-reference", "destination": "/api/feed_reference" },
     { "source": "/api/feed-submissions", "destination": "/api/feed_submissions" },
-    { "source": "/", "destination": "/api/index" }
+    { "source": "/api/tickets/:ticketId", "destination": "/api/ticket?ticket_id=:ticketId" }
   ],
   "functions": {
     "api/*.py": {
