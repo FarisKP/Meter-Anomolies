@@ -3,8 +3,11 @@
 __pycache__/
 *.py[cod]
 .env
+frontend/node_modules/
+frontend/dist/
 
 # Local source and generated data; Supabase is the shared runtime data store.
 meter_usage_5cust_3years (1).csv
 simulated_current_meter_usage.csv
 usage_spike_results.csv
+premise_address_import_review.csv

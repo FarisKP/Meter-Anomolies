@@ -1,6 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
+    { "source": "/api/feed-reference", "destination": "/api/feed_reference" },
+    { "source": "/api/feed-submissions", "destination": "/api/feed_submissions" },
     { "source": "/", "destination": "/api/index" }
   ],
   "functions": {

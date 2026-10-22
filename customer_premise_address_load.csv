@@ -1,0 +1,6 @@
+customer_id,premise_id,address_line1,city,state,postal_code,country_code,source_updated_at
+CUST0001,PREM-DEMO-0001,101 Example Avenue,Cleveland,OH,44114,US,2026-10-22T00:00:00Z
+CUST0002,PREM-DEMO-0002,202 Sample Street,Cleveland,OH,44114,US,2026-10-22T00:00:00Z
+CUST0003,PREM-DEMO-0003,303 Test Drive,Cincinnati,OH,45202,US,2026-10-22T00:00:00Z
+CUST0004,PREM-DEMO-0004,404 Demo Road,Toledo,OH,43604,US,2026-10-22T00:00:00Z
+CUST0005,PREM-DEMO-0005,505 Prototype Lane,Akron,OH,44308,US,2026-10-22T00:00:00Z
